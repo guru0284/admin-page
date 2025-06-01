@@ -17,7 +17,7 @@ export default function Adminpage() {
   const [subjects, setSubjects] = useState(['']);
   const [errors, setErrors] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [successMessage, setSuccessMessage] = useState('');
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
 
   const classes = [
     'LKG', 'UKG', 'PREP',
@@ -82,10 +82,10 @@ export default function Adminpage() {
       };
 
       await api.post('/subjects', payload);
-      setSuccessMessage('Subjects saved successfully!');
+      setShowSuccessPopup(true);
       setTimeout(() => {
+        setShowSuccessPopup(false);
         setShowModal(false);
-        setSuccessMessage('');
         setSubjects(['']);
       }, 1500);
     } catch (error) {
@@ -106,7 +106,16 @@ export default function Adminpage() {
 
   return (
     <div className="min-h-screen bg-gray-50 p-8">
-      <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-sm p-6">
+      {/* Success Popup (Toast) */}
+      {showSuccessPopup && (
+        <div className="fixed inset-0 flex items-center justify-center z-50">
+          <div className="fixed top-4 right-4 z-50 p-4 bg-green-100 border border-green-400 text-green-900 rounded-lg shadow-lg animate-fade-in-out">
+            Subjects saved successfully!
+          </div>
+        </div>
+      )}
+
+      <div className="max-w-4xl mx-auto bg-blue-400 rounded-lg shadow-sm p-6">
         <h1 className="text-2xl font-bold text-gray-800 mb-6">
           Class Subject Management
         </h1>
@@ -132,18 +141,12 @@ export default function Adminpage() {
           disabled={!selectedClass}
           className={`px-4 py-2 rounded-md ${
             selectedClass
-              ? 'bg-blue-600 hover:bg-blue-700 text-white'
+              ? 'bg-violet-600 text-white'
               : 'bg-gray-300 cursor-not-allowed'
           } transition-colors`}
         >
           Add Subjects
         </button>
-
-        {successMessage && (
-          <div className="mt-4 p-3 bg-green-100 text-green-700 rounded-md">
-            {successMessage}
-          </div>
-        )}
 
         {showModal && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
@@ -196,7 +199,7 @@ export default function Adminpage() {
                   <button
                     type="button"
                     onClick={handleAddSubject}
-                    className="w-full py-2 text-blue-600 hover:bg-blue-50 rounded-md"
+                    className="w-full py-2 text-violet-600  rounded-md"
                   >
                     + Add Another Subject
                   </button>
