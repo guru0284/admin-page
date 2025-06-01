@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import axios from 'axios';
 
-// Use the proxy path as baseURL
+
 const api = axios.create({
   baseURL: '/api',
   timeout: 10000,
